@@ -4,7 +4,7 @@ import serial
 
 # Jetson nano 수신부
 jet_rx = serial.Serial(
-    port='/dev/ttyUSB1',
+    port='/dev/ttyUSB0',
     baudrate=9600,
     bytesize=serial.EIGHTBITS,
     parity=serial.PARITY_NONE,

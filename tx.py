@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 import time
 import serial
+from datetime import datetime
 
 # Jetson nano 송신부
 jet_tx = serial.Serial(
@@ -15,15 +16,21 @@ jet_tx = serial.Serial(
 time.sleep(1)
 
 num = 0
-sleep_rate = 0.5
+sleep_rate = 1
 
 while True:
     try:
-        msg = 'message'.ljust(20, "-") + '[{}]\n'.format(num)
+        msg = 'message'.ljust(20, "-") + f'[{num}]\n'
         msg_len = len(msg)
         jet_tx.write(msg.encode())
-        print('send_message[{}], rate: {}bytes per {}sec'.format(num, msg_len, sleep_rate))
+        print(f'send_message[{num}], rate: {msg_len}bytes per {sleep_rate}sec')
         num += 1
+        now = datetime.now()
+        if jet_tx.readable():
+            rx_data = jet_tx.readline().decode()
+            delay_time = now - datetime.now()
+            print(f'{rx_data[:len(rx_data)-1]} -> Delay Time: {(delay_time.microseconds/1000000)/2}sec\n')
+
         time.sleep(sleep_rate)
     except Exception as e:
         print(e)
