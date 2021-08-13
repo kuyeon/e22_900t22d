@@ -4,8 +4,10 @@ import serial
 from datetime import datetime
 
 # Jetson nano 송신부
+port_num = input("tty: ")
+
 jet_tx = serial.Serial(
-    port='/dev/ttyUSB0',
+    port=f'/dev/tty{port_num}',
     baudrate=9600,
     bytesize=serial.EIGHTBITS,
     parity=serial.PARITY_NONE,
@@ -30,7 +32,6 @@ while True:
             rx_data = jet_tx.readline().decode()
             delay_time = now - datetime.now()
             print(f'{rx_data[:len(rx_data)-1]} -> Delay Time: {(delay_time.microseconds/1000000)/2}sec\n')
-
         time.sleep(sleep_rate)
     except Exception as e:
         print(e)
